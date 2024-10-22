@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Dark background layer -->
+    <item>
+        <color android:color="#2D2E33" />
+    </item>
+
+
+</layer-list>

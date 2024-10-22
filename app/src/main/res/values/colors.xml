@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary color used in the app (adjust the hex value to fit your design) -->
+    <color name="primary_color">#1E88E5</color>
+    <color name="primary_dark_color">#1565C0</color>
+    <color name="primary_light_color">#90CAF9</color>
+    <color name="accent_color">#FFC107</color>
+</resources>
