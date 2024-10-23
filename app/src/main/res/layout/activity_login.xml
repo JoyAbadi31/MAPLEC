@@ -1,50 +1,41 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_background">
+    android:background="@drawable/login">
 
     <!-- Back button -->
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/primary_color"
-        android:layout_alignParentStart="true"
-        android:layout_margin="16dp" />
 
     <!-- Centered form container -->
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="350dp"
         android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:padding="20dp"
+        android:layout_gravity="center"
         android:background="@drawable/login_form_background"
         android:elevation="5dp"
-        android:layout_gravity="center"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <!-- Title for the login form -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:textSize="24sp"
-            android:textColor="@android:color/black"
             android:layout_gravity="center"
-            android:paddingBottom="20dp" />
+            android:paddingBottom="20dp"
+            android:text="Login"
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
 
         <!-- Email field -->
         <EditText
             android:id="@+id/emailField"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@drawable/input_field_background"
             android:hint="Email"
             android:padding="10dp"
-            android:background="@drawable/input_field_background"
             android:textColor="@android:color/black" />
 
         <!-- Password field -->
@@ -52,11 +43,11 @@
             android:id="@+id/passwordField"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/input_field_background"
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/input_field_background"
             android:textColor="@android:color/black" />
 
         <!-- Login button -->
@@ -65,19 +56,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:backgroundTint="@color/primary_color"
             android:text="Login"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/primary_color" />
+            android:textColor="@android:color/white" />
 
         <!-- Register Now link -->
         <TextView
             android:id="@+id/registerNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Don’t have an account? Register Now"
-            android:textColor="@android:color/holo_blue_dark"
             android:gravity="center"
-            android:layout_gravity="center" />
+            android:text="Don’t have an account? Register Now"
+            android:textColor="@android:color/holo_blue_dark" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:backgroundTint="#00FFFFFF"
+        android:tint="#FFFFFF"
+        app:srcCompat="@drawable/baseline_arrow_back_ios_new_24" />
 </RelativeLayout>

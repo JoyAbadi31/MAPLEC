@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow layer -->
+    <item>
+        <shape android:shape="rectangle" android:left="4dp" android:top="4dp" android:right="4dp" android:bottom="4dp">
+            <solid android:color="#E0E0E0" /> <!-- Warna bayangan -->
+            <corners android:radius="16dp" /> <!-- Membuat sudut melengkung -->
+        </shape>
+    </item>
+
+    <!-- Background layer with border radius -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" /> <!-- Warna putih untuk background -->
+            <corners android:radius="16dp" /> <!-- Radius sudut (border radius) -->
+        </shape>
+    </item>
+
+</layer-list>

@@ -21,7 +21,7 @@ class RegisterActivity : AppCompatActivity() {
         formContainer = findViewById(R.id.form_container)
         registerButton = findViewById(R.id.registerButton)
         vendorCheckbox = findViewById(R.id.vendorCheckbox)
-        backButton = findViewById(R.id.backButton) // Initialize back button
+         // Initialize back button
 
         // Inflate user registration form by default
         inflateForm(R.layout.register_user)
@@ -45,12 +45,6 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // Handle back button click
-        backButton.setOnClickListener {
-            // Navigate back to MainActivity
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish() // Close RegisterActivity
-        }
     }
 
     // Function to inflate the selected registration form

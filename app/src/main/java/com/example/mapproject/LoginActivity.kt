@@ -1,15 +1,18 @@
 package com.example.mapproject
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class LoginActivity : AppCompatActivity() {
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -18,10 +21,10 @@ class LoginActivity : AppCompatActivity() {
         val registerNow = findViewById<TextView>(R.id.registerNow)
 
         // Initialize Back button
-        val backButton = findViewById<Button>(R.id.backButton)
+        val backButton = findViewById<ImageButton>(R.id.backButton)
         backButton.setOnClickListener {
             // Navigate back to MainActivity
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, Welcome::class.java)
             startActivity(intent)
             finish() // Close LoginActivity
         }

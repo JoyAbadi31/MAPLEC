@@ -1,9 +1,22 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.MAPProject" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryVariant">@color/primary_dark_color</item>
+        <item name="colorOnPrimary">@color/pure_white</item> <!-- Text color on primary -->
+        <item name="colorSecondary">@color/accent_color</item>
+        <item name="colorSecondaryVariant">@color/primary_light_color</item>
+        <item name="colorOnSecondary">@color/pure_white</item>
+        <item name="colorOnBackground">@color/primary_color</item> <!-- Text color on background -->
+        <item name="colorSurface">@color/off_white</item> <!-- Surface color -->
+        <item name="colorOnSurface">@color/primary_color</item> <!-- Text color on surface -->
+        <item name="android:buttonStyle">@style/Widget.MAPProject.Button</item> <!-- Custom button style -->
     </style>
 
     <style name="Theme.MAPProject" parent="Base.Theme.MAPProject" />
+
+    <style name="Widget.MAPProject.Button" parent="Widget.Material3.Button">
+        <item name="android:background">@color/off_white</item> <!-- Default button background color -->
+        <item name="android:textColor">@color/primary_color</item> <!-- Button text color -->
+    </style>
 </resources>
