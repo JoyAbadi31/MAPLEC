@@ -13,22 +13,23 @@
         android:theme="@style/Theme.MAPProject"
         tools:targetApi="31">
         <activity
+            android:name=".CreateMenu"
+            android:exported="false" />
+        <activity
             android:name=".Welcome"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".TenantProfile"
             android:exported="false" /> <!-- MainActivity Declaration (with launcher intent filter) -->
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" /> <!-- RegisterActivity Declaration -->

@@ -18,7 +18,7 @@ class Welcome : AppCompatActivity() {
         val btn_user: Button = findViewById(R.id.btn_user)
 
         btn_vendor.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, CreateMenu::class.java)
             startActivity(intent)
         }
 

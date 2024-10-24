@@ -59,7 +59,7 @@
         android:background="@drawable/form_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="62dp" />
+        tools:layout_editor_absoluteY="323dp" />
 
     <!-- Vendor Toggle Checkbox -->
 
