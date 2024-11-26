@@ -17,21 +17,19 @@ class TenantProfile : AppCompatActivity() {
     private lateinit var menuList: MutableList<MenuItem>
     private lateinit var menuAdapter: MenuAdapter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tenant_profile)
 
-        // Inisialisasi RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         menuList = mutableListOf()
         menuAdapter = MenuAdapter(menuList)
         recyclerView.adapter = menuAdapter
 
-        // Inisialisasi Database Firebase
         database = Firebase.database.reference.child("menuItems")
 
-        // Ambil data dari Firebase
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 menuList.clear()
@@ -41,12 +39,10 @@ class TenantProfile : AppCompatActivity() {
                         menuList.add(menuItem)
                     }
                 }
-                // Notifikasi adapter untuk memperbarui tampilan
                 menuAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error jika terjadi
             }
         })
     }
