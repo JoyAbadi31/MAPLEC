@@ -31,6 +31,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Name" />
+        
+        <EditText
+            android:id="@+id/editTextPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Price"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/editTextStock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Stock"
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/editTextDescription"

@@ -35,6 +35,8 @@ class CreateMenu : AppCompatActivity() {
         val selectImageButton = findViewById<Button>(R.id.selectImage)
         val saveButton = findViewById<Button>(R.id.buttonSave)
         val nameEditText = findViewById<EditText>(R.id.editTextName)
+        val priceEditText = findViewById<EditText>(R.id.editTextPrice)
+        val stockEditText = findViewById<EditText>(R.id.editTextStock)
         val descriptionEditText = findViewById<EditText>(R.id.editTextDescription)
 
         // Aksi memilih gambar dari galeri
@@ -46,28 +48,31 @@ class CreateMenu : AppCompatActivity() {
 
         // Aksi menyimpan data ke Firebase
         saveButton.setOnClickListener {
+            val price = priceEditText.text.toString().toIntOrNull() ?: 0
+            val stock = stockEditText.text.toString().toIntOrNull() ?: 0
             val name = nameEditText.text.toString()
             val description = descriptionEditText.text.toString()
 
-            if (::imageUri.isInitialized && name.isNotEmpty() && description.isNotEmpty()) {
+            if (::imageUri.isInitialized && name.isNotEmpty() && description.isNotEmpty() && price > 0 && stock >= 0) {
                 uploadImageToFirebaseStorage { imageUrl ->
                     val itemId = database.push().key!!
-                    val menuItem = MenuItem(itemId, name, description, imageUrl)
+                    val menuItem = MenuItem(itemId, name, price, stock, description,imageUrl)
                     database.child(itemId).setValue(menuItem).addOnSuccessListener {
                         // Beri tahu pengguna bahwa item berhasil disimpan
                         Toast.makeText(this, "Item saved", Toast.LENGTH_SHORT).show()
-
-                        // Kosongkan form
+                        // Reset fields
                         nameEditText.text.clear()
                         descriptionEditText.text.clear()
+                        priceEditText.text.clear()
+                        stockEditText.text.clear()
                         imageView.setImageResource(R.drawable.icon_paket) // Reset image ke placeholder
                         imageUri = Uri.EMPTY // Reset imageUri ke null
                     }.addOnFailureListener {
-                        Toast.makeText(this, "Failed to save item", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Failed to save item.", Toast.LENGTH_SHORT).show()
                     }
                 }
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_SHORT).show()
             }
         }
 
