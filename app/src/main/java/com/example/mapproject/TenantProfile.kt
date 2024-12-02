@@ -1,6 +1,9 @@
 package com.example.mapproject
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +23,12 @@ class TenantProfile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tenant_profile)
+
+        val backbtn : ImageButton = findViewById(R.id.back_button)
+        backbtn.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         // Inisialisasi RecyclerView
         recyclerView = findViewById(R.id.recyclerView)

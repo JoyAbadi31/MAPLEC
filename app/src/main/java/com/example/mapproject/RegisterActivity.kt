@@ -1,107 +1,74 @@
 package com.example.mapproject
-
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class RegisterActivity : AppCompatActivity() {
-
-    private lateinit var formContainer: FrameLayout
-    private lateinit var registerButton: Button
-    private lateinit var vendorCheckbox: CheckBox
-    private lateinit var backButton: Button // Add back button variable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Initialize UI components
-        formContainer = findViewById(R.id.form_container)
-        registerButton = findViewById(R.id.registerButton)
-        vendorCheckbox = findViewById(R.id.vendorCheckbox)
-         // Initialize back button
-
-        // Inflate user registration form by default
-        inflateForm(R.layout.register_user)
-
-        // Toggle between user and vendor registration forms
-        vendorCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                inflateForm(R.layout.register_vendor)
-            } else {
-                inflateForm(R.layout.register_user)
-            }
-        }
-
-        // Handle registration button click
-        registerButton.setOnClickListener {
-            if (vendorCheckbox.isChecked) {
-                handleVendorRegistration()
-            } else {
-                handleUserRegistration()
-            }
-        }
-
-        // Handle back button click
-    }
-
-    // Function to inflate the selected registration form
-    private fun inflateForm(layoutId: Int) {
-        val inflater = LayoutInflater.from(this)
-        formContainer.removeAllViews()
-        inflater.inflate(layoutId, formContainer, true)
-    }
-
-    // Function to handle regular user registration
-    private fun handleUserRegistration() {
-        val nameField = findViewById<EditText>(R.id.nameField)
-        val emailField = findViewById<EditText>(R.id.emailField)
-        val passwordField = findViewById<EditText>(R.id.passwordField)
-        val confirmPasswordField = findViewById<EditText>(R.id.confirmPasswordField)
-
-        val name = nameField.text.toString()
-        val email = emailField.text.toString()
-        val password = passwordField.text.toString()
-        val confirmPassword = confirmPasswordField.text.toString()
-
-        if (validateInputs(name, email, password, confirmPassword)) {
-            Toast.makeText(this, "User Registered Successfully!", Toast.LENGTH_SHORT).show()
-            finish() // Close the RegisterActivity and return to MainActivity
-        }
-    }
-
-    // Function to handle vendor registration
-    private fun handleVendorRegistration() {
+        // Mendapatkan referensi komponen di layout
         val nameField = findViewById<EditText>(R.id.nameField)
         val standLocationField = findViewById<EditText>(R.id.standLocationField)
         val emailField = findViewById<EditText>(R.id.emailField)
         val passwordField = findViewById<EditText>(R.id.passwordField)
-        val confirmPasswordField = findViewById<EditText>(R.id.confirmPasswordField)
+        val registerButton = findViewById<Button>(R.id.registerButton)
+        val backButton = findViewById<ImageButton>(R.id.backButton)
 
-        val name = nameField.text.toString()
-        val standLocation = standLocationField.text.toString()
-        val email = emailField.text.toString()
-        val password = passwordField.text.toString()
-        val confirmPassword = confirmPasswordField.text.toString()
+        // Tombol Kembali
+        backButton.setOnClickListener {
+            finish() // Menutup aktivitas saat tombol kembali ditekan
+        }
 
-        if (validateInputs(name, email, password, confirmPassword)) {
-            Toast.makeText(this, "Vendor Registered Successfully!", Toast.LENGTH_SHORT).show()
-            finish() // Close the RegisterActivity and return to MainActivity
+        // Tombol Register
+        registerButton.setOnClickListener {
+            val name = nameField.text.toString()
+            val standLocation = standLocationField.text.toString()
+            val email = emailField.text.toString()
+            val password = passwordField.text.toString()
+
+            // Validasi input
+            if (name.isEmpty() || standLocation.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Semua field harus diisi", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Proses registrasi dengan Firebase Authentication
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Simpan data pengguna ke Firebase Realtime Database
+                        val userId = FirebaseAuth.getInstance().currentUser?.uid
+                        val user = User(name, standLocation, email)
+
+                        FirebaseDatabase.getInstance().getReference("users")
+                            .child(userId!!)
+                            .setValue(user)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    Toast.makeText(this, "Registrasi berhasil", Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this, LoginActivity::class.java))
+                                    finish() // Tutup aktivitas setelah sukses
+                                } else {
+                                    Toast.makeText(this, "Gagal menyimpan data: ${it.exception?.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(this, "Registrasi gagal: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
     }
 
-    // Function to validate inputs for both user and vendor
-    private fun validateInputs(name: String, email: String, password: String, confirmPassword: String): Boolean {
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        if (password != confirmPassword) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
-    }
+    // Data class untuk struktur data pengguna
+    data class User(val name: String, val standLocation: String, val email: String)
 }
+

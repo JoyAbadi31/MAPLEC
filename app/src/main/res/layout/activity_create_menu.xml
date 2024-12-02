@@ -43,6 +43,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save" />
+
+        <Button
+            android:id="@+id/profileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profile" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

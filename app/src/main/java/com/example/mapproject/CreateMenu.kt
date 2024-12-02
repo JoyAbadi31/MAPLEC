@@ -36,6 +36,7 @@ class CreateMenu : AppCompatActivity() {
         val saveButton = findViewById<Button>(R.id.buttonSave)
         val nameEditText = findViewById<EditText>(R.id.editTextName)
         val descriptionEditText = findViewById<EditText>(R.id.editTextDescription)
+        val profileButton = findViewById<Button>(R.id.profileButton)
 
         // Aksi memilih gambar dari galeri
         selectImageButton.setOnClickListener {
@@ -43,7 +44,11 @@ class CreateMenu : AppCompatActivity() {
             intent.type = "image/*"
             startActivityForResult(intent, IMAGE_PICK_CODE)
         }
-
+        // Handle Profile Button
+        profileButton.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
         // Aksi menyimpan data ke Firebase
         saveButton.setOnClickListener {
             val name = nameEditText.text.toString()

@@ -7,11 +7,7 @@
     android:background="@drawable/register"
     tools:context=".RegisterActivity">
 
-    <!-- Back Button -->
 
-    <!-- Title -->
-
-    <!-- Form Container (for dynamic forms) -->
 
     <ImageButton
         android:id="@+id/backButton"
@@ -22,47 +18,28 @@
         android:backgroundTint="#00FFFFFF"
         android:tint="#FFFFFF"
         app:srcCompat="@drawable/baseline_arrow_back_ios_new_24" />
-
-    <CheckBox
-        android:id="@+id/vendorCheckbox"
-        android:layout_width="wrap_content"
+    <include
+        layout="@layout/register_vendor"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="212dp"
-        android:background="@drawable/button_background"
-        android:padding="20dp"
-        android:text="Ingin Register sebagai Vendor?"
-        android:textColor="#000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintTop_toBottomOf="@id/backButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/form_container" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="180dp"/>
 
     <Button
         android:id="@+id/registerButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="64dp"
         android:backgroundTint="@android:color/white"
         android:elevation="5dp"
         android:text="Register"
         android:textColor="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vendorCheckbox" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/form_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:background="@drawable/form_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="323dp" />
-
-    <!-- Vendor Toggle Checkbox -->
-
-    <!-- Register Button -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
