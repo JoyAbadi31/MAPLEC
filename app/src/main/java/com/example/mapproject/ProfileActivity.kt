@@ -22,7 +22,7 @@ class ProfileActivity : AppCompatActivity() {
 
         // Inisialisasi Firebase
         auth = FirebaseAuth.getInstance()
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        databaseReference = FirebaseDatabase.getInstance().getReference("users") // Sesuai dengan struktur database Anda
 
         // Inisialisasi Views
         nameTextView = findViewById(R.id.nameTextView)
@@ -33,21 +33,28 @@ class ProfileActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val uid = currentUser.uid
-            Log.d("ProfileActivity", "UID: $uid") // Debug UID
+            Log.d("ProfileActivity", "userId: $uid") // Debug UID
 
             // Ambil data pengguna dari Firebase
             databaseReference.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d("ProfileActivity", "Snapshot: $snapshot") // Debug data snapshot
+
                     if (snapshot.exists()) {
+                        // Ambil data dari snapshot
                         val name = snapshot.child("name").value?.toString() ?: "Unknown"
                         val email = snapshot.child("email").value?.toString() ?: "Unknown"
                         val standLocation = snapshot.child("standLocation").value?.toString() ?: "Unknown"
 
+                        // Debug nilai yang didapat
+                        Log.d("ProfileActivity", "Name: $name, Email: $email, Stand Location: $standLocation")
+
+                        // Tampilkan data di TextView
                         nameTextView.text = "Name: $name"
                         emailTextView.text = "Email: $email"
                         standLocationTextView.text = "Stand Location: $standLocation"
                     } else {
-                        Log.e("ProfileActivity", "User data not found!")
+                        Log.e("ProfileActivity", "Users data not found!")
                         Toast.makeText(this@ProfileActivity, "User data not found!", Toast.LENGTH_SHORT).show()
                     }
                 }
