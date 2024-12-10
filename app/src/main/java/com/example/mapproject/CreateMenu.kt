@@ -42,6 +42,7 @@ class CreateMenu : AppCompatActivity() {
         val saveButton = findViewById<Button>(R.id.buttonSave)
         val nameEditText = findViewById<EditText>(R.id.editTextName)
         val descriptionEditText = findViewById<EditText>(R.id.editTextDescription)
+        val profileButton = findViewById<Button>(R.id.profileButton)
 
         selectImageButton.setOnClickListener {
             showImageSourceOptions()
@@ -68,6 +69,10 @@ class CreateMenu : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
             }
+        }
+        profileButton.setOnClickListener {
+            // Navigasi ke ProfileActivity
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
     }
 
@@ -140,4 +145,6 @@ class CreateMenu : AppCompatActivity() {
         const val IMAGE_PICK_CODE = 1000
         const val CAMERA_PERMISSION_CODE = 2000
     }
+
+
 }

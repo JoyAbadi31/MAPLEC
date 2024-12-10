@@ -47,7 +47,7 @@ class RegisterActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Simpan data pengguna ke Firebase Realtime Database
                         val userId = FirebaseAuth.getInstance().currentUser?.uid
-                        val user = User(name, standLocation, email)
+                        val user = User(name, standLocation, email, 1) // Set accessLevel default = 1
 
                         FirebaseDatabase.getInstance().getReference("users")
                             .child(userId!!)
@@ -69,6 +69,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // Data class untuk struktur data pengguna
-    data class User(val name: String, val standLocation: String, val email: String)
+    data class User(
+        val name: String,
+        val standLocation: String,
+        val email: String,
+        val accessLevel: Int // Tambahkan properti accessLevel
+    )
 }
-
