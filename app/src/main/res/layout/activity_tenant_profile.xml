@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/vendorBannerView"
         android:layout_width="443dp"
         android:layout_height="193dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,7 +48,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/restoName"
+                android:id="@+id/vendorName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sumanto Resto"
@@ -57,7 +57,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/restoDescription"
+                android:id="@+id/vendorDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

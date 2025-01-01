@@ -6,6 +6,9 @@
     <color name="primary_light_color">#90CAF9</color>
     <color name="accent_color">#FFC107</color>
 
+    <color name="hijau_khas">#00cc00</color>
+    <color name="merah_khas">#990033</color>
+
     <color name="pure_white">#FFFFFF</color>    <!-- Pure White -->
     <color name="off_white">#F8F8FF</color>     <!-- Off-White (Bone White) -->
     <color name="sky_blue">#87CEEB</color>      <!-- Sky Blue -->
