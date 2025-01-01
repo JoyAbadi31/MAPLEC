@@ -42,43 +42,44 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Authenticate user with Firebase
+            // Authenticate user asynchronously
             auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
+                .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        // Login successful, fetch user access level
+                        // Authentication successful, get the current user
                         val userId = auth.currentUser?.uid
-                        val userRef = FirebaseDatabase.getInstance().getReference("users").child(userId!!)
+                        val userRef = FirebaseDatabase.getInstance().getReference("users")
 
-                        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.exists()) {
-                                    // Get accessLevel from database
-                                    val accessLevel = snapshot.child("accessLevel").getValue(Int::class.java)
-                                    if (accessLevel == 1) {
-                                        // Navigate to CreateMenu if accessLevel is 1
-                                        startActivity(Intent(this@LoginActivity, CreateMenu::class.java))
-                                    } else if (accessLevel == 2) {
-                                        // Navigate to MainActivity if accessLevel is 2
+                        // Querying user by email with better async handling
+                        userRef.orderByChild("email").equalTo(email)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    if (snapshot.exists()) {
+                                        // Find the matching user and proceed
+                                        val userSnapshot = snapshot.children.first()
+                                        val userIdFromDb = userSnapshot.key  // This is your custom UID
+
+                                        // Proceed to the main activity
                                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                        finish() // Close LoginActivity
+                                    } else {
+                                        // Show error if user data is not found
+                                        Toast.makeText(this@LoginActivity, "Data pengguna tidak ditemukan!", Toast.LENGTH_SHORT).show()
                                     }
-                                    finish() // Close LoginActivity
-                                } else {
-                                    Toast.makeText(this@LoginActivity, "Data pengguna tidak ditemukan!", Toast.LENGTH_SHORT).show()
                                 }
-                            }
 
-                            override fun onCancelled(error: DatabaseError) {
-                                Toast.makeText(this@LoginActivity, "Gagal memuat data: ${error.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        })
+                                override fun onCancelled(error: DatabaseError) {
+                                    Toast.makeText(this@LoginActivity, "Gagal memuat data: ${error.message}", Toast.LENGTH_SHORT).show()
+                                }
+                            })
                     } else {
-                        // Login failed
+                        // If authentication fails
                         val errorMessage = task.exception?.localizedMessage ?: "Login gagal."
                         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
                     }
                 }
         }
+
 
         // Handle register now text click
         registerNow.setOnClickListener {
