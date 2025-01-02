@@ -19,6 +19,7 @@
 
             <!-- Main Profile Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/profileCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -74,10 +75,10 @@
                         android:layout_marginBottom="16dp"
                         android:text="Stand Location: Unknown"
                         android:textAppearance="?attr/textAppearanceBody1"
+                        app:layout_constraintBottom_toTopOf="@id/chatAdminTextView"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@id/emailTextView"
-                        app:layout_constraintTop_toBottomOf="@id/emailTextView"
-                        app:layout_constraintBottom_toTopOf="@id/chatAdminTextView"/>
+                        app:layout_constraintTop_toBottomOf="@id/emailTextView" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/chatAdminTextView"
@@ -109,15 +110,16 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/chatAdminTextView" />
+
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/logoutTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center"
                         android:text="Log Out"
-                        android:layout_marginBottom="16dp"
                         android:textColor="#000000"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -132,7 +134,27 @@
             <FrameLayout
                 android:id="@+id/conditionalLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileCard"
+                tools:visibility="gone">
+
+                <FrameLayout
+                    android:id="@+id/vendorDetailsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp" />
+
+                <Button
+                    android:id="@+id/vendorMenuButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="VIEW MENU"
+                    android:layout_marginTop="16dp" />
+            </FrameLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
