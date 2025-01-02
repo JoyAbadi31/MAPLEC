@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MAPProject</string>
+    <string name="editing_vendor_details">Editing:</string>
 </resources>
