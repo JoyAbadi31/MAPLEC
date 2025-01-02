@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    private val TAG = "LoginActivity"
+    private val logTag = "LoginActivity"
     private val database = FirebaseDatabase.getInstance()
     private var userCustomId: String? = null
 
@@ -22,6 +22,17 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
+
+        // Check if user is already logged in
+        val currentUser = auth.currentUser
+        val loginButton = findViewById<Button>(R.id.loginButton)
+
+        if (currentUser != null) {
+            // If the user is already logged in, disable the login button
+            loginButton.isEnabled = false
+            Toast.makeText(this, "Already logged in as ${currentUser.email}", Toast.LENGTH_SHORT).show()
+        }
+
         setupViews()
     }
 
@@ -54,27 +65,45 @@ class LoginActivity : AppCompatActivity() {
         }
 
         loginButton.isEnabled = false
+        loginButton.setBackgroundColor(resources.getColor(com.google.android.material.R.color.material_on_primary_disabled)) // Disable button visual
+        Log.d(logTag, "Starting login process...")
 
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             try {
+                // Sign in with Firebase Authentication
+                Log.d(logTag, "Attempting Firebase Authentication")
                 auth.signInWithEmailAndPassword(email, password).await()
 
+                // Query the database in a background thread
+                Log.d(logTag, "Querying database for user data")
                 val snapshots = withContext(Dispatchers.IO) {
-                    database.reference.child("users").get().await()
+                    database.reference.child("users").orderByChild("email").equalTo(email).get().await()
                 }
 
-                snapshots.children.forEach { snapshot ->
+                // Iterate through the snapshots to find the matching user
+                Log.d(logTag, "Processing database results...")
+                for (snapshot in snapshots.children) {
                     val userEmail = snapshot.child("email").value as? String
                     if (userEmail == email) {
                         userCustomId = snapshot.key
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        Log.d(logTag, "User found, starting Welcome Activity")
+                        val intent = Intent(this@LoginActivity, Welcome::class.java)
                         intent.putExtra("USER_CUSTOM_ID", userCustomId)
-                        startActivity(intent)
-                        finish()
-                        return@forEach
+
+                        // Set flags to clear the back stack and prevent going back
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                        // Only start the new activity if the LoginActivity is still valid
+                        if (!isFinishing && !isDestroyed) {
+                            startActivity(intent)
+                            finish()
+                        }
+
+                        return@launch  // Ensure we exit the coroutine after starting Welcome Activity
                     }
                 }
 
+                // If no user found
                 Toast.makeText(
                     this@LoginActivity,
                     "Data pengguna tidak ditemukan!",
@@ -82,12 +111,17 @@ class LoginActivity : AppCompatActivity() {
                 ).show()
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error: ${e.message}", e)
+                Log.e(logTag, "Error: ${e.message}", e)
                 Toast.makeText(this@LoginActivity, e.message ?: "Login gagal.", Toast.LENGTH_SHORT)
                     .show()
             } finally {
-                loginButton.isEnabled = true
+                // Only update the UI if the LoginActivity is still valid
+                if (!isFinishing && !isDestroyed) {
+                    loginButton.isEnabled = true
+                    loginButton.setBackgroundColor(resources.getColor(R.color.primary_color)) // Restore button color
+                }
             }
         }
     }
+
 }

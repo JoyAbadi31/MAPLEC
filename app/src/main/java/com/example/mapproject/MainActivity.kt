@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mapproject.adapters.VendorAdapter
 import com.example.mapproject.models.Vendor
+import com.example.mapproject.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    val currentUser = FirebaseAuth.getInstance().currentUser
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -79,23 +81,50 @@ class MainActivity : AppCompatActivity() {
             fetchVendorsWithCoroutines()
         }
 
-        navProfile.setOnClickListener {
-            // Check authentication only when accessing profile
-            val currentUser = FirebaseAuth.getInstance().currentUser
+        updateProfileButtonState()
 
+        navProfile.setOnClickListener {
+            val currentUser = FirebaseAuth.getInstance().currentUser
             if (currentUser != null) {
-                // User is logged in, navigate to Profile
-                val intent = Intent(this, ProfileActivity::class.java).apply {
-                    putExtra("userName", currentUser.displayName)
-                    putExtra("userEmail", currentUser.email)
-                    putExtra("userUid", currentUser.uid)
+                lifecycleScope.launch {
+                    try {
+                        // Step 1: Fetch the custom user ID from userIdMapping
+                        val customUserId = withContext(Dispatchers.IO) {
+                            database.reference.child("userIdMapping").child(currentUser.uid).get().await().value.toString()
+                        }
+
+                        // Step 2: Use customUserId to fetch user data from the 'users' node
+                        val userSnapshot = withContext(Dispatchers.IO) {
+                            database.reference.child("users").child(customUserId).get().await()
+                        }
+
+                        if (userSnapshot.exists()) {
+                            val userData = userSnapshot.getValue(User::class.java)
+                            Log.d("MainActivity", "User data: $userData")
+
+                            val intent = Intent(this@MainActivity, ProfileActivity::class.java).apply {
+                                putExtra("USER_CUSTOM_ID", userData?.userId ?: "")
+                                putExtra("name", userData?.name ?: "Unknown")
+                                putExtra("email", userData?.email ?: "Unknown")
+                                putExtra("standLocation", userData?.standLocation ?: "Unknown")
+                                putExtra("vendorBoundTo", userData?.vendorBoundTo ?: "Unknown")
+                            }
+                            startActivity(intent)
+                        } else {
+                            Log.e("MainActivity", "No data found for custom userId: $customUserId")
+                            Toast.makeText(this@MainActivity, "No user data found", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MainActivity", "Failed to fetch user data: ${e.message}")
+                        Toast.makeText(this@MainActivity, "Failed to load profile", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                startActivity(intent)
             } else {
-                // User is not logged in, redirect to Login
                 startActivity(Intent(this, LoginActivity::class.java))
             }
         }
+
+
     }
 
     private fun fetchVendorsWithCoroutines() {
@@ -133,6 +162,16 @@ class MainActivity : AppCompatActivity() {
             randomMessage = randomMessages[Random.nextInt(randomMessages.size)]
         } while (randomMessage == recyclerViewTitle.text.toString())
         return randomMessage
+    }
+
+    private fun updateProfileButtonState() {
+        val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
+        navProfile.isEnabled = true // Keep enabled to allow login redirect
+        navProfile.setColorFilter(
+            if (isLoggedIn) getColor(android.R.color.white)
+            else getColor(android.R.color.darker_gray),
+            android.graphics.PorterDuff.Mode.SRC_IN
+        )
     }
 
     override fun onDestroy() {

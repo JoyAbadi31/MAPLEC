@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.example.mapproject.models.User
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -26,6 +27,9 @@ class RegisterActivity : AppCompatActivity() {
         val passwordField = findViewById<EditText>(R.id.passwordField)
         val registerButton = findViewById<Button>(R.id.registerButton)
         val backButton = findViewById<ImageButton>(R.id.backButton)
+
+        val usersRef = FirebaseDatabase.getInstance().getReference("users")
+        val mappingRef = FirebaseDatabase.getInstance().getReference("userIdMapping")
 
         // Tombol Kembali
         backButton.setOnClickListener {
@@ -53,47 +57,30 @@ class RegisterActivity : AppCompatActivity() {
                         val usersRef = FirebaseDatabase.getInstance().getReference("users")
                         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
-                                // Get the current number of users in the database
                                 val userCount = snapshot.childrenCount
-                                // Generate custom UID based on the count (e.g., U00000000000001)
-                                val customUID =
-                                    generateCustomUID(userCount.toInt() + 1) // Increment count for new user
+                                val customUID = generateCustomUID(userCount.toInt() + 1)
 
-                                // Create a new user object
                                 val user = User(customUID, name, standLocation, email, "")
-
-                                // Save the user under the custom UID
-                                usersRef.child(customUID).setValue(user)
-                                    .addOnCompleteListener {
-                                        if (it.isSuccessful) {
-                                            Toast.makeText(
-                                                this@RegisterActivity,
-                                                "Registrasi berhasil",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            startActivity(
-                                                Intent(
-                                                    this@RegisterActivity,
-                                                    LoginActivity::class.java
-                                                )
-                                            )
-                                            finish() // Tutup aktivitas setelah sukses
-                                        } else {
-                                            Toast.makeText(
-                                                this@RegisterActivity,
-                                                "Gagal menyimpan data: ${it.exception?.message}",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                usersRef.child(customUID).setValue(user).addOnCompleteListener { userTask ->
+                                    if (userTask.isSuccessful) {
+                                        val currentUser = FirebaseAuth.getInstance().currentUser
+                                        mappingRef.child(currentUser!!.uid).setValue(customUID).addOnCompleteListener { mappingTask ->
+                                            if (mappingTask.isSuccessful) {
+                                                Toast.makeText(this@RegisterActivity, "Registrasi berhasil", Toast.LENGTH_SHORT).show()
+                                                startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+                                                finish()
+                                            } else {
+                                                Toast.makeText(this@RegisterActivity, "Gagal menyimpan mapping data", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
+                                    } else {
+                                        Toast.makeText(this@RegisterActivity, "Gagal menyimpan data: ${userTask.exception?.message}", Toast.LENGTH_SHORT).show()
                                     }
+                                }
                             }
 
                             override fun onCancelled(error: DatabaseError) {
-                                Toast.makeText(
-                                    this@RegisterActivity,
-                                    "Gagal mendapatkan data pengguna: ${error.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(this@RegisterActivity, "Gagal mendapatkan data pengguna: ${error.message}", Toast.LENGTH_SHORT).show()
                             }
                         })
                     } else {
@@ -113,13 +100,4 @@ class RegisterActivity : AppCompatActivity() {
         val formattedCount = String.format("%014d", count)
         return "U$formattedCount"
     }
-
-    // Data class for user structure
-    data class User(
-        val userId: String, // Custom generated UID
-        val name: String,
-        val standLocation: String,
-        val email: String,
-        var vendorBoundTo: String // Vendor the user is bound to
-    )
 }

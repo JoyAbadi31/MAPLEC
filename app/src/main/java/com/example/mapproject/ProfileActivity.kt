@@ -7,6 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mapproject.dialogs.VendorBindDialog
 import com.google.firebase.database.*
+import com.example.mapproject.models.User
+import com.google.firebase.auth.FirebaseAuth
+import kotlin.math.log
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var databaseReference: DatabaseReference
@@ -15,6 +18,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var standLocationTextView: TextView
     private lateinit var chatAdminTextView: TextView
     private lateinit var bindVendorTextView: TextView
+    private lateinit var logoutTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,7 @@ class ProfileActivity : AppCompatActivity() {
         standLocationTextView = findViewById(R.id.standLocationTextView)
         chatAdminTextView = findViewById(R.id.chatAdminTextView)
         bindVendorTextView = findViewById(R.id.bindVendorTextView)
+        logoutTextView = findViewById(R.id.logoutTextView)
     }
 
     private fun setupClickListeners() {
@@ -41,6 +46,14 @@ class ProfileActivity : AppCompatActivity() {
 
         bindVendorTextView.setOnClickListener {
             VendorBindDialog().show(supportFragmentManager, "VendorBindDialog")
+        }
+
+        logoutTextView.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, Welcome::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 
