@@ -39,8 +39,8 @@ class RegisterActivity : AppCompatActivity() {
         // Tombol Register
         registerButton.setOnClickListener {
             val name = nameField.text.toString()
-            val standLocation = standLocationField.text.toString()
             val email = emailField.text.toString()
+            val standLocation = standLocationField.text.toString()
             val password = passwordField.text.toString()
 
             // Validasi input
@@ -60,7 +60,7 @@ class RegisterActivity : AppCompatActivity() {
                                 val userCount = snapshot.childrenCount
                                 val customUID = generateCustomUID(userCount.toInt() + 1)
 
-                                val user = User(customUID, name, standLocation, email, "")
+                                val user = User(customUID, name, email, standLocation, "")
                                 usersRef.child(customUID).setValue(user).addOnCompleteListener { userTask ->
                                     if (userTask.isSuccessful) {
                                         val currentUser = FirebaseAuth.getInstance().currentUser

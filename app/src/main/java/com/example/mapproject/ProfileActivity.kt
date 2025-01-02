@@ -42,6 +42,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun setupClickListeners() {
         chatAdminTextView.setOnClickListener {
             startActivity(Intent(this, ChatAdminActivity::class.java))
+            finish()
         }
 
         bindVendorTextView.setOnClickListener {
